@@ -29,26 +29,46 @@ default_params = default_options();
 
 %% train the network
 
-ex_path = do_learning_task( 'results/', ...
-                  { [ 1,2,5,6,7 ], ...     %AB-hold-ab
-                    [ 2,1,5,7,6 ], ...     %BA-hold-ba
-                    [ 3,4,5,8,9 ], ...     %CD-hold-cd
-                    [ 4,3,5,9,8 ] }, ...   %DC-hold-dc
+ex_path = do_learning_task( 'D:\temp\', ...
+                  { [ 1,2,2,1,4,5,1,7,6,1], ...     %dealy 1, near cue 2, far cue 3, R1 cue 4, reward 5, R2 cue 6, 
+                    [ 1,3,3,1,4,6,1,7,5,1 ], ...     %far
+                }, ...  
                   default_params{:}, ...
-                  'free_run_seqs', { [ 1,2,5 ], ...    %AB-hold
-                                     [ 2,1,5 ], ...    %BA-hold
-                                     [ 3,4,5 ], ...    %CD-hold
-                                     [ 4,3,5 ] }, ...  %DC-hold
-                  'pat_labels', { 'A', 'B', 'C', 'D', 'hold', 'a', 'b', 'c', 'd' }, ...
+                  'pat_labels', { 'delay', 'near cue', 'far cue', 'R1 cue', 'reward','noreward', 'R2 cue'}, ...
                   'free_run_pat_lenghts', [0.050,0.050,0.150], ...
                   'num_neurons', 100, ...             % number of WTA neurons
                   'num_inputs', 200, ...              % number of afferent neurons
                   'free_run_time', 0.400, ...         % free run time (s)
-                  'save_interval', 100, ...           % number of iterations between 2 save files
+                  'save_interval', 200, ...           % number of iterations between 2 save files
                   'num_train_sets', 5000, ...        % number of training iterations
                   'collect', '[At,R]', ...
                   'num_epochs', 1, ...
                   'changelog_flag', 'N' );
+%before 8.30 21h 28m
+% [ 1,2,2,1,4,5,1,6,6,1], ...     %dealy 1, near cue 2, far cue 3, R1 cue 4, reward 5, R2 cue 6, 
+% [ 1,3,3,1,4,4,1,6,5,1 ], ...     %far
+
+% ex_path = do_learning_task( 'D:\temp\', ...
+%                   { [ 1,2,5,6,7 ], ...     %AB-hold-ab
+%                     [ 2,1,5,7,6 ], ...     %BA-hold-ba
+%                     [ 3,4,5,8,9 ], ...     %CD-hold-cd
+%                     [ 4,3,5,9,8 ] }, ...   %DC-hold-dc
+%                   default_params{:}, ...
+%                   'free_run_seqs', { [ 1,2,5 ], ...    %AB-hold
+%                                      [ 2,1,5 ], ...    %BA-hold
+%                                      [ 3,4,5 ], ...    %CD-hold
+%                                      [ 4,3,5 ] }, ...  %DC-hold
+%                   'pat_labels', { 'A', 'B', 'C', 'D', 'hold', 'a', 'b', 'c', 'd' }, ...
+%                   'free_run_pat_lenghts', [0.050,0.050,0.150], ...
+%                   'num_neurons', 100, ...             % number of WTA neurons
+%                   'num_inputs', 200, ...              % number of afferent neurons
+%                   'free_run_time', 0.400, ...         % free run time (s)
+%                   'save_interval', 100, ...           % number of iterations between 2 save files
+%                   'num_train_sets', 5000, ...        % number of training iterations
+%                   'collect', '[At,R]', ...
+%                   'num_epochs', 1, ...
+%                   'changelog_flag', 'N' );
+
 
 
 %% evaluate training result

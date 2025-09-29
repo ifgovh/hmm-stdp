@@ -18,11 +18,11 @@ function save_fig( h_ref, file_name, base_path )
 
     set( h_ref, 'PaperPositionMode', 'auto' );
     
-    f_h = [ '-f', num2str(h_ref) ];
+    % f_h = [ '-f', num2str(h_ref) ];
 
     saveas( h_ref, file_path, 'fig' );
-    print( f_h, '-depsc', '-painters', '-r300', file_path );
-    print( f_h, '-dpdf', '-painters', '-r300', file_path );
+    % print( f_h, '-depsc', '-painters', '-r300', file_path );
+    % print( f_h, '-dpdf', '-painters', '-r300', file_path );
     
     fprintf('figure saved to ''%s''\n',file_path)
 end

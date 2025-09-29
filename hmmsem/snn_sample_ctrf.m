@@ -91,7 +91,7 @@ function [net,Z,P] = snn_sample_ctrf( net, data, ct )
     
     W_exp = exp( double( net.W ) );
     V_exp = exp( double( net.V ) );
-    V0_exp = exp( double( net.V0 ) );
+    % V0_exp = exp( double( net.V0 ) );
 
     net.d_W =  zeros(net.num_neurons,net.num_inputs);
     net.d_V =  zeros(net.num_neurons,net.num_neurons);
@@ -128,12 +128,12 @@ function [net,Z,P] = snn_sample_ctrf( net, data, ct )
         SV_new = net.SV;
         QV_new = net.QV;
 
-        S0_new = net.S0;
-        Q0_new = net.Q0;
+        % S0_new = net.S0;
+        % Q0_new = net.Q0;
         
         net.eta_W = net.eta*(QW_new-SW_new.^2)./(exp(-SW_new)+1);
         net.eta_V = net.eta*(QV_new-SV_new.^2)./(exp(-SV_new)+1);
-        net.eta_0 = net.eta*(Q0_new-S0_new.^2)./(exp(-S0_new)+1);
+        % net.eta_0 = net.eta*(Q0_new-S0_new.^2)./(exp(-S0_new)+1);
     end
 
     use_exact_iw = strcmp( net.iw_mode, 'exact' );
@@ -239,7 +239,7 @@ function [net,Z,P] = snn_sample_ctrf( net, data, ct )
             % prepare synaptic weight updates (STDP)
             d_W_k = net.eta_W(k,:).*(net.alpha_w*d_hX'-W_exp(k,:))./max(net.eta_W(k,:),W_exp(k,:));
             d_V_k = net.eta_V(k,:).*(net.alpha_v*d_hZ'-V_exp(k,:))./max(net.eta_V(k,:),V_exp(k,:));
-            d_V0  = net.eta_0.*(Z_i-V0_exp)./max(net.eta_0,V0_exp);
+            % d_V0  = net.eta_0.*(Z_i-V0_exp)./max(net.eta_0,V0_exp);
                        
             net.At(:,j) = [A,t];
             
@@ -251,17 +251,17 @@ function [net,Z,P] = snn_sample_ctrf( net, data, ct )
                 SV_new(k,:) = SV_new(k,:) + net.eta_V(k,:).*((net.V(k,:)+d_V_k)-SV_new(k,:));
                 QV_new(k,:) = QV_new(k,:) + net.eta_V(k,:).*((net.V(k,:)+d_V_k).^2-QV_new(k,:));
                 
-                S0_new = S0_new + net.eta_0.*((net.V0+d_V0)-S0_new);
-                Q0_new = Q0_new + net.eta_0.*((net.V0+d_V0).^2-Q0_new);
+                % S0_new = S0_new + net.eta_0.*((net.V0+d_V0)-S0_new);
+                % Q0_new = Q0_new + net.eta_0.*((net.V0+d_V0).^2-Q0_new);
             end
             
             if net.update_on_spike
                 net.W(k,:) = net.W(k,:) + d_W_k;
                 net.V(k,:) = net.V(k,:) + d_V_k;
-                net.V0 = net.V0 + d_V0;
+                % net.V0 = net.V0 + d_V0;
                 W_exp(k,:) = exp( double( net.W(k,:) ) );
                 V_exp(k,:) = exp( double( net.V(k,:) ) );
-                V0_exp = exp( double( net.V0 ) );
+                % V0_exp = exp( double( net.V0 ) );
             else
                 net.d_W(k,:) = net.d_W(k,:) + d_W_k;
                 net.d_V(k,:) = net.d_V(k,:) + d_V_k;                
@@ -290,8 +290,8 @@ function [net,Z,P] = snn_sample_ctrf( net, data, ct )
         net.SV_new = SV_new;
         net.QV_new = QV_new;
 
-        net.S0_new = S0_new;
-        net.Q0_new = Q0_new;
+        % net.S0_new = S0_new;
+        % net.Q0_new = Q0_new;
     end
     
     net.rec_spikes = rec_spikes(:,l:end);

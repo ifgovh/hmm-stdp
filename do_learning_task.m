@@ -384,8 +384,11 @@ function save_path = do_learning_task( exp_path, pat_sequences, varargin )
                 for j = 1:num_test_sets
 
                     net_sim.use_inhibition = true;
-                    [sim_test{j},net_sim] = snn_simulate( net_sim, test_set{j}.data, 'collect', field_collectors );
-                    [sim_free{j},net_sim] = snn_simulate( net_sim, free_run_data{j}.data, 'collect', field_collectors );        
+                    for kk = 1:10
+                    [sim_test{j,kk},net_sim] = snn_simulate( net_sim, test_set{j}.data, 'collect', field_collectors );
+                    end
+                    [sim_free{j},net_sim] = snn_simulate( net_sim, free_run_data{j}.data, 'collect', field_collectors );       
+                    
                 end
 
                 performance( epoch, iteration/save_interval+1 ) = snn_performance( net, sim_test{1} );
@@ -447,7 +450,7 @@ function save_path = do_learning_task( exp_path, pat_sequences, varargin )
             fprintf( '%f ', sim_train(:).R );
             fprintf( '] / [ ' );
             fprintf( '%f ', wta_softmax( [sim_train(:).R]' ) );
-            fprintf( '] R_mean %f\n', net.r_mean );
+            % fprintf( '] R_mean %f\n', net.r_mean );
         end
 
         cur_iteration = 1;

@@ -1,11 +1,36 @@
-function options = default_options()
+function options = default_options(train_method, w_coeff, v_coeff)
+  % DEFAULT_OPTIONS  return default options for experiments
+%
+% Usage:
+%   opts = default_options()
+%   opts = default_options(train_method)
+%   opts = default_options(train_method, w_coeff, v_coeff)
+%
+% train_method (optional)  - string, e.g. 'ct' or 'st' (default: 'ct')
+% w_coeff, v_coeff (optional) - numeric coefficients (default: 1.0)
+
+  % existing option population ...
+  % ...existing code...
+
+  % --- backward compatible defaults for the new arguments ---
+  if (nargin < 1) || isempty(train_method)
+      train_method = 'ct';    % keep a sensible default
+  end
+
+  if (nargin < 2) || isempty(w_coeff)
+      w_coeff = 1.0;
+  end
+
+  if (nargin < 3) || isempty(v_coeff)
+      v_coeff = 1.0;
+  end
    options =    { 'base_path', '', ...                % base path for data storage                  
                   'pattern_length', 0.050, ...        % each pattern has constant length (s)
                   'free_run_time', 0.400, ...         % free run time (s)
                   'input_rate', 15, ...               % mean input rate per neuron (Hz)
                   'output_rate', 200, ...             % circuit output rate (Hz)
                   'sample_method', 'ctrf', ...        % continuous time spiking
-                  'train_method', 'rs', ...           % continuous time batch update
+                  'train_method', train_method, ...           % continuous time batch update
                   'pattern_type', 'beta', ...         % draw pattern from beta distribution
                   'pat_alpha', 0.2, ...               % alpha parameter of beta distribution
                   'pat_beta', 0.8, ...                % beta parameter of beta distribution
@@ -29,6 +54,8 @@ function options = default_options()
                   'regen_seqs', true, ...             % regenerate sequences in each epoch
                   'iw_track_speed', 0.001, ...        % speed of importance weight tracking
                   'num_samples', 1, ...               % number of samples at once
+                  'w_coeff', w_coeff, ...             % coeff for w in initialization
+                  'v_coeff', v_coeff, ...             % coeff for v in initialization
                 };
             
     snn_options( 'colors', [ 0.0, 0.0, 1.0; ... %A

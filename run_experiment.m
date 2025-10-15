@@ -20,7 +20,9 @@
 
 
 %% init
-
+for iiii = 1:50
+    close all
+    clearvars -except iiii
 run snn1.7/snn_include;
 snn_include( 'sem', 'hmmsem', 'plotting' );
 
@@ -30,7 +32,7 @@ default_params = default_options();
 %% train the network
 
 ex_path = do_learning_task( 'D:\temp\', ...
-                  { [ 1,2,2,1,4,5,1,7,6,1], ...     %dealy 1, near cue 2, far cue 3, R1 cue 4, reward 5, R2 cue 6, 
+                  { [ 1,2,2,1,4,5,1,7,6,1], ...     %dealy 1, near cue 2, far cue 3, R1 cue 4, reward 5, noreward 6, R2 cue 7, 
                     [ 1,3,3,1,4,6,1,7,5,1 ], ...     %far
                 }, ...  
                   default_params{:}, ...
@@ -39,8 +41,8 @@ ex_path = do_learning_task( 'D:\temp\', ...
                   'num_neurons', 100, ...             % number of WTA neurons
                   'num_inputs', 200, ...              % number of afferent neurons
                   'free_run_time', 0.400, ...         % free run time (s)
-                  'save_interval', 200, ...           % number of iterations between 2 save files
-                  'num_train_sets', 5000, ...        % number of training iterations
+                  'save_interval', 50, ...           % number of iterations between 2 save files
+                  'num_train_sets', 1000, ...        % number of training iterations
                   'collect', '[At,R]', ...
                   'num_epochs', 1, ...
                   'changelog_flag', 'N' );
@@ -81,15 +83,16 @@ eval_mem_task( ex_path );
 
 %% display results
 
-data = load( [ex_path,'mem_task_test.mat'] );
+% data = load( [ex_path,'mem_task_test.mat'] );
+% 
+% plot_mem_task( data, [], 'seq_id', 1, 'data_set', 'test_data', ...
+%                'plot_spikes', false, 'neuron_order', data.I, 'fig_file', 'evoced_1', ...
+%                'peth_set', 'peth_test', 'dy', 0.5, 'base_path', ex_path );
+% 
+% plot_mem_task( data, [], 'seq_id', 2, 'data_set', 'test_data', ...
+%                'plot_spikes', false, 'neuron_order', data.I, 'fig_file', 'evoced_2', ...
+%                'peth_set', 'peth_test', 'dy', 0.5, 'base_path', ex_path );
 
-plot_mem_task( data, [], 'seq_id', 1, 'data_set', 'test_data', ...
-               'plot_spikes', false, 'neuron_order', data.I, 'fig_file', 'evoced_1', ...
-               'peth_set', 'peth_test', 'dy', 0.5, 'base_path', ex_path );
+% explore_data_set( ex_path )
 
-plot_mem_task( data, [], 'seq_id', 2, 'data_set', 'test_data', ...
-               'plot_spikes', false, 'neuron_order', data.I, 'fig_file', 'evoced_2', ...
-               'peth_set', 'peth_test', 'dy', 0.5, 'base_path', ex_path );
-
-explore_data_set( ex_path )
-
+end

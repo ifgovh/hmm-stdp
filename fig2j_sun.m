@@ -1,11 +1,18 @@
 
 clear
 close all
-d = dir('D:\temp\2025.10.01-17h17m47s_hasnoreward_ct\data_set*mat');
 dt = 0.001;
 sigma = 0.01;
 fil = inline('exp( -((x-mu).^2)./(2*sigma^2) )', 'x', 'mu', 'sigma');
 
+folders = dir('D:\temp\hasnoreward_ct\2025*');
+[off_diagonal,initial_region, pre_R2,indicator, pre_R1, end_region, R1,  R2]=deal(zeros(numel(folders),20));
+for jj=1:ceil(numel(folders)*1)
+d = dir(fullfile('D:\temp\hasnoreward_ct',folders(jj).name, 'data_set*mat'));
+R = load(fullfile(d(1).folder,d(1).name));
+st = R.sim_test{1}.time(1);
+samples = st:dt:R.sim_test{1}.time(end);
+smooth_activity = zeros(numel(d),size(R.sim_test,1),size(R.sim_test,2),R.net.num_neurons, length(samples));
 for iter = 1:numel(d)
     R = load(fullfile(d(iter).folder,d(iter).name));
     st = R.sim_test{1}.time(1);
@@ -30,6 +37,7 @@ event_start_ind = [1,   51, 151 ,201,      301,  351,      451]; % 4,5 put toget
 % end_ind = [ 50,  150, 200, 300,      350,  450,      501];
 start_ind = 1:5:496;
 end_ind = 5:5:501;
+clear data c
 for iter = 1:size(smooth_activity,1)
     for seq_id = 1:size(R.sim_test,1)
         for ii=1:numel(start_ind)
@@ -38,54 +46,30 @@ for iter = 1:size(smooth_activity,1)
     end
     c(iter,:,:) = corr(squeeze(data(iter,1,:,:)),squeeze(data(iter,2,:,:)));
 end
-%%
-% close all
-% figure
-% % plot_iter = [1,2,3,4,25];
-% plot_iter = [10,11,12,13,14];
-% for ii = 1:5
-% subplot(1,5,ii)
-% hold on
-% imagesc(start_ind-0.5,start_ind-0.5,squeeze(c(plot_iter(ii),:,:)))
-% title(sprintf('%d ms',200*(plot_iter(ii)-1)))
-% for j = 1:numel(event_start_ind)
-% plot([event_start_ind(j),event_start_ind(j)],[0,500],'w:')
-% plot([0,500],[event_start_ind(j),event_start_ind(j)],'w:')
-% end
-% for j = [2, 4, 6]
-%     rectangle('Position', [event_start_ind(j), event_start_ind(j), event_start_ind(j+1)-event_start_ind(j), event_start_ind(j+1)-event_start_ind(j)], ...
-%               'EdgeColor', 'w', 'LineWidth', 1, 'FaceColor', 'none')
-% end
-% colormap('hot')
-% clim([0,1])
-% colorbar
-% box on
-% axis square 
-% axis([0,500,0,500])
-% set(gca,'xtick',event_start_ind([2,4,6])+50,'XTickLabel',{'cue','R1','R2'},'ydir','reverse',...
-%     'ytick',event_start_ind([2,4,6])+50,'YTickLabel',{'cue','R1','R2'})
-% end
-%%
-close all
-
+% c = abs(c);
 plot_iter = 1:size(c,1);
 %                 delay cue delay R1 reward delay R2 reward delay
 % event_start_ind = [1,   51, 151 ,201,      301,  351,      451]; % 4,5 put together
 for ii = 1:numel(plot_iter)
-initial_region(ii) = mean(c(plot_iter(ii),1:10,1:10),'all');
-indicator(ii) = mean(c(plot_iter(ii),11:30,11:30),'all');
-pre_R1(ii) = mean(c(plot_iter(ii),31:40,31:40),'all');
-R1(ii) = mean(c(plot_iter(ii),41:60,41:60),'all');
-pre_R2(ii) = mean(c(plot_iter(ii),61:70,61:70),'all');
-R2(ii) = mean(c(plot_iter(ii),71:90,71:90),'all');
-end_region(ii) = mean(c(plot_iter(ii),91:100,91:100),'all');
-off_diagonal(ii) = mean(c(plot_iter(ii),[1:10,1:10,1:10,31:40,61:70,91:100],[31:40,61:70,91:100,31:40,61:70,91:100]),'all');
+initial_region(jj,ii) = mean(c(plot_iter(ii),1:10,1:10),'all');
+indicator(jj,ii) = mean(c(plot_iter(ii),11:30,11:30),'all');
+pre_R1(jj,ii) = mean(c(plot_iter(ii),31:40,31:40),'all');
+R1(jj,ii) = mean(c(plot_iter(ii),41:60,41:60),'all');
+pre_R2(jj,ii) = mean(c(plot_iter(ii),61:70,61:70),'all');
+R2(jj,ii) = mean(c(plot_iter(ii),71:90,71:90),'all');
+end_region(jj,ii) = mean(c(plot_iter(ii),91:100,91:100),'all');
+off_diagonal(jj,ii) = mean(c(plot_iter(ii),[1:10,1:10,1:10,31:40,61:70,91:100],[31:40,61:70,91:100,31:40,61:70,91:100]),'all');
 end
+end
+%%
 figure
 hold on
-plot(pre_R1)
-plot(pre_R2)
+plot(1:50:size(pre_R1,2)*50,mean(pre_R1,1))
+plot(1:50:size(pre_R2,2)*50,mean(pre_R2,1))
+% plot(mean(off_diagonal,1))
 legend({'pre R1','pre R2'})
+xlabel('Time (ms)')
+ylabel('Correlation coefficient')
 % plot_data = {off_diagonal;initial_region; pre_R2;indicator; pre_R1; end_region; R1;  R2;};
 % titles = {'Off-diagonal';'Initial region'; 'Pre R2'; 'Indicator'; 'Pre R1'; 'End region'; 'R1'; 'R2';};
 % FontSize = 10;

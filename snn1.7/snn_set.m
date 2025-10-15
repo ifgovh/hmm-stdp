@@ -127,5 +127,6 @@ function net = snn_set( net, varargin )
     net = snn_alloc( net, { net.p_train_allocators{:}, ...
                             net.p_sample_allocators{:}, ...
                             net.p_performance_allocators{:} }, reset_fields );
-    
+    % net.V = 10*net.V;
+    % net.W = 0.5*net.W;
 end

@@ -17,7 +17,7 @@ function options = default_options()
                   'w_rf', -10, ...                    % refractory amplitude
                   'rec_delay', 0.005, ...             % delay on lateral synapses (s)
                   'eta', 0.005', ...                  % learning rate
-                  'use_iw', false, ...                % use importance sampling
+                  'use_iw', true, ...                % use importance sampling
                   'save_interval', 1000, ...          % number of iterations between 2 save files
                   'reset_psps', false, ...            % reset EPSPs to 0 at beginning of sequence
                   'num_groups', 1, ...                % number of WTA circuits in population

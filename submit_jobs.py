@@ -5,7 +5,7 @@ import argparse
 import glob
 
 def main(args):
-    ncpus = 16
+    ncpus = 8
     slurm_config = {
         'nodes': '1',
         'time': '72:59:00',
@@ -23,15 +23,15 @@ def main(args):
     """
     cmd = ''
 
-    for train_method in ['rs','ct','is']:
-        for w_coeff, v_coeff in [(0.5, 10), (0.5, 2), (0.5, 5), (0.1, 7)]:
+    for train_method in ['rs']:#,'rs''ct','is']:
+        for w_coeff, v_coeff in [(0.5, 10), (0.5, 2), (0.5, 5)]:#[(0.5, 10), (0.5, 2), (0.5, 5)]:
 
             cmd += (f'srun -u --cpu-bind=threads -c {ncpus} matlab -nodisplay -nosplash'
                     f' -r "cd(\'/home/guozhang/hmm-stdp\'), addpath(genpath(cd)),'
                     f' run_experiment(\'{train_method}\', {w_coeff}, {v_coeff}), exit";\n')
-    import pdb;
-    pdb.set_trace()
-    print(cmd)
+    #import pdb;
+    #pdb.set_trace()
+    #print(cmd)
     if cmd != '':
         hexid = np.random.randint(0, 16**5)
         run_name = 'ep{:05x}'.format(hexid)
